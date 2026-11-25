@@ -1,5 +1,6 @@
 
 using Microsoft.AspNetCore.Mvc;
+using Game.Api.Services;
 
 namespace Game.Api.Controllers;
 
@@ -7,16 +8,30 @@ namespace Game.Api.Controllers;
 [Route("api/[controller]")]
 public class GameController : ControllerBase
 {
-    // Week 1: controleren of de API werkt
+    private readonly GameService _gameService;
+
+    // GameService ontvangen via de constructor
+    public GameController(GameService gameService)
+    {
+        _gameService = gameService;
+    }
+
+    // Week 1: API-status controleren
     [HttpGet("status")]
     public IActionResult Status()
     {
-        // Een bericht teruggeven aan de gebruiker
         return Ok(new
         {
             message = "API werkt"
         });
     }
-}
 
-        
+    // Week 2: spelinformatie ophalen
+    [HttpGet("info")]
+    public IActionResult Info()
+    {
+        var spelInformatie = _gameService.GetInfo();
+
+        return Ok(spelInformatie);
+    }
+}
