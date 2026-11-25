@@ -4,10 +4,12 @@
         {
             "label": "build-api",
             "type": "process",
-            "command": "/Users/dinnyvanhuizen/.dotnet/dotnet",
+            "command": "dotnet",
             "args": [
                 "build",
-                "${workspaceFolder}/RPG_API/RPG_API.csproj"
+                "${workspaceFolder}/RPG_API/RPG_API.csproj",
+                "--configuration",
+                "Debug"
             ],
             "problemMatcher": "$msCompile",
             "group": "build"
@@ -15,48 +17,52 @@
         {
             "label": "build-console",
             "type": "process",
-            "command": "/Users/dinnyvanhuizen/.dotnet/dotnet",
+            "command": "dotnet",
             "args": [
                 "build",
-                "${workspaceFolder}/RPG_Console/RPG_Console.csproj"
+                "${workspaceFolder}/RPG_Console/RPG_Console.csproj",
+                "--configuration",
+                "Debug"
             ],
             "problemMatcher": "$msCompile",
             "group": "build"
         },
         {
-            "label": "start-db",
+            "label": "restore-dotnet-tools",
             "type": "process",
-            "command": "/bin/bash",
+            "command": "dotnet",
             "args": [
-                "/Users/dinnyvanhuizen/MBO-U/.services/mysql/start.sh"
+                "tool",
+                "restore"
             ],
+            "options": {
+                "cwd": "${workspaceFolder}"
+            },
             "problemMatcher": []
         },
         {
             "label": "migrate-db",
             "type": "process",
-            "command": "/Users/dinnyvanhuizen/.dotnet/dotnet",
+            "command": "dotnet",
             "args": [
-                "ef",
+                "tool",
+                "run",
+                "--allow-roll-forward",
+                "dotnet-ef",
+                "--",
                 "database",
                 "update",
                 "--project",
-                "RPG_API/RPG_API.csproj"
+                "RPG_API/RPG_API.csproj",
+                "--",
+                "--environment",
+                "Development"
             ],
             "options": {
                 "cwd": "${workspaceFolder}"
             },
-            "dependsOn": "start-db",
+            "dependsOn": "restore-dotnet-tools",
             "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "prepare-api",
-            "dependsOn": [
-                "start-db",
-                "build-api"
-            ],
-            "dependsOrder": "sequence",
-            "problemMatcher": []
         }
     ]
 }

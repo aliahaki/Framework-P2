@@ -13,7 +13,7 @@
             },
             "console": "integratedTerminal",
             "stopAtEntry": false,
-            "preLaunchTask": "prepare-api"
+            "preLaunchTask": "build-api"
         },
         {
             "name": ".NET Launch Console",
