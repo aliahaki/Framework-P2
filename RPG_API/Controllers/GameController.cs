@@ -1,6 +1,7 @@
 
 using Microsoft.AspNetCore.Mvc;
 using Game.Api.Services;
+using Game.Api.Models;
 
 namespace Game.Api.Controllers;
 
@@ -10,13 +11,13 @@ public class GameController : ControllerBase
 {
     private readonly GameService _gameService;
 
-    // GameService ontvangen via dependency injection
+    // Service ontvangen via dependency injection
     public GameController(GameService gameService)
     {
         _gameService = gameService;
     }
 
-    // Controleren of de API werkt
+    // Week 1: status controleren
     [HttpGet("status")]
     public IActionResult Status()
     {
@@ -26,17 +27,39 @@ public class GameController : ControllerBase
         });
     }
 
-    // Informatie over Quiz Challenge ophalen
+    // Week 2: spelinformatie ophalen
     [HttpGet("info")]
     public IActionResult Info()
     {
         return Ok(_gameService.GetInfo());
     }
 
-    // Alle quizvragen ophalen
+    // Quizvragen ophalen
     [HttpGet("vragen")]
     public IActionResult Vragen()
     {
         return Ok(_gameService.GetVragen());
+    }
+
+    // Week 3: een nieuw spel starten
+    [HttpPost]
+    public async Task<ActionResult<GameResponse>> Start(
+        StartGameRequest request)
+    {
+        try
+        {
+            // De spelregels staan in GameService
+            GameResponse spel = await _gameService.StartAsync(request);
+
+            return Ok(spel);
+        }
+        catch (ArgumentException uitzondering)
+        {
+            // Ongeldige spelernaam geeft HTTP 400
+            return BadRequest(new
+            {
+                message = uitzondering.Message
+            });
+        }
     }
 }
