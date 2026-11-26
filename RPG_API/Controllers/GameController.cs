@@ -10,13 +10,13 @@ public class GameController : ControllerBase
 {
     private readonly GameService _gameService;
 
-    // GameService ontvangen via de constructor
+    // GameService ontvangen via dependency injection
     public GameController(GameService gameService)
     {
         _gameService = gameService;
     }
 
-    // Week 1: API-status controleren
+    // Controleren of de API werkt
     [HttpGet("status")]
     public IActionResult Status()
     {
@@ -26,12 +26,17 @@ public class GameController : ControllerBase
         });
     }
 
-    // Week 2: spelinformatie ophalen
+    // Informatie over Quiz Challenge ophalen
     [HttpGet("info")]
     public IActionResult Info()
     {
-        var spelInformatie = _gameService.GetInfo();
+        return Ok(_gameService.GetInfo());
+    }
 
-        return Ok(spelInformatie);
+    // Alle quizvragen ophalen
+    [HttpGet("vragen")]
+    public IActionResult Vragen()
+    {
+        return Ok(_gameService.GetVragen());
     }
 }
