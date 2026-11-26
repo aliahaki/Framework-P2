@@ -1,9 +1,11 @@
 
+using Game.Api.Models;
+
 namespace Game.Api.Services;
 
 public class GameService
 {
-    // Algemene informatie over onze quizgame
+    // Week 2: informatie over Quiz Challenge
     public SpelInformatie GetInfo()
     {
         return new SpelInformatie(
@@ -13,7 +15,7 @@ public class GameService
         );
     }
 
-    // De vragen en antwoorden van de quiz
+    // Week 2: de quizvragen ophalen
     public List<QuizVraag> GetVragen()
     {
         return new List<QuizVraag>
@@ -62,7 +64,7 @@ public class GameService
 
             new(
                 7,
-                "Welke HTTP-methode gebruikt een API om gegevens op te halen?",
+                "Welke HTTP-methode haalt gegevens op?",
                 new[] { "GET", "DELETE", "PATCH", "POST" },
                 1
             ),
@@ -95,16 +97,41 @@ public class GameService
             )
         };
     }
+
+    // Week 3: een nieuw spel starten via de API
+    public Task<GameResponse> StartAsync(StartGameRequest request)
+    {
+        // Spelernaam controleren
+        if (string.IsNullOrWhiteSpace(request.PlayerName))
+        {
+            throw new ArgumentException(
+                "Je moet eerst een spelernaam invullen."
+            );
+        }
+
+        string spelerNaam = request.PlayerName.Trim();
+
+        // Tijdelijk spel zonder database
+        GameResponse spel = new GameResponse
+        {
+            Id = 1,
+            CurrentLocation = "Quizzaal",
+            Message = $"Welkom bij Quiz Challenge, {spelerNaam}!"
+        };
+
+        // Tijdelijk resultaat teruggeven als Task
+        return Task.FromResult(spel);
+    }
 }
 
-// Informatie over het spel
+// Spelinformatie uit Week 2
 public record SpelInformatie(
     string Titel,
     string Omschrijving,
     int AantalVragen
 );
 
-// Eén quizvraag met vier antwoorden
+// Quizvraag uit Week 2
 public record QuizVraag(
     int Id,
     string Vraag,
